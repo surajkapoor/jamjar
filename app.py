@@ -1,21 +1,24 @@
-from jamjar import server, add_route, render_template
+from jamjar import JamJar, server, render_template
+
+app = JamJar(__name__)
 
 def home():
     age = 18
     name = "SURAJ"
     return render_template("hello.html", name = name, age = age, school = "HACKER SCHOOL")
-    
-add_route('/', home)    
-    
-def postpage():
-    return render_template("post.html")
-    
-def            
+   
+app.add_route('/', home)    
+
+def get_namepage():
+    return render_template("namepage.html")                  
                  
-add_route('/postpage', postpage)
+app.add_route('/namepage', get_namepage)
 
-
+def data(data):
+    radio = data.getvalue("radio")
+    return render_template('data.html', radio = radio)
+    
+app.add_route('/data', data)
 
 server.serve_forever()        
 
-#{func: posturl, value} 
