@@ -25,14 +25,13 @@ class JamJar(object):
         print "running on http://localhost:8080/..."
         server.serve_forever()
         
-def render_template(template, **var):
-    file = open(template)
-    s = file.read()
-    if var:
-        for each in var:
-            s = re.sub(r'{{\s*%s\s*}}' %each, str(var[each]), s)
-    file.close()    
-    return s    
+    def render_template(self, template, **vars):
+        with open(template) as f:
+            s = f.read()
+            for template_var in vars:
+                value = str(vars[template_var])
+                s = re.sub(r'{{\s*%s\s*}}' % template_var, value, s)
+        return s    
         
  
 if __name__ == '__main__':
