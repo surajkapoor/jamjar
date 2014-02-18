@@ -2,19 +2,14 @@ from wsgiref.simple_server import make_server
 import cgi
 import re
 
-ROUTES = {}
-
 class JamJar(object):
     
     def __init__(self, name):
         self.name = name
-        
+        self.routes = {}
+
     def add_route(self, route, func):
-        "APPENDS ROUTE TO GLOBAL DICTIONARY"
-        self.route = route
-        self.func = func
-        ROUTES[self.route] = self.func
-        
+        self.routes[route] = func
         
     def myapp(self, environ, start_response):
         self.environ = environ
@@ -27,8 +22,8 @@ class JamJar(object):
                 self.data.getvalue(self.data.keys()[0])
             except IndexError:
                 return "You didn't select an option"    
-            return ROUTES[self.environ["PATH_INFO"]](self.data)
-        return ROUTES[self.environ["PATH_INFO"]]()
+            return self.routes[self.environ["PATH_INFO"]](self.data)
+        return self.routes[self.environ["PATH_INFO"]]()
 
     def run(self):
         server = make_server('localhost', 8080, self.myapp)
