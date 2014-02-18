@@ -1,4 +1,4 @@
-from jamjar import JamJar, server, render_template
+from jamjar import JamJar, render_template
 
 app = JamJar(__name__)
 
@@ -20,5 +20,6 @@ def data(data):
     
 app.add_route('/data', data)
 
-server.serve_forever()        
+if __name__ == '__main__':
+	app.run()
 

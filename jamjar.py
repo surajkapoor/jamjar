@@ -28,7 +28,12 @@ class JamJar(object):
             except IndexError:
                 return "You didn't select an option"    
             return ROUTES[self.environ["PATH_INFO"]](self.data)
-        return ROUTES[self.environ["PATH_INFO"]]() 
+        return ROUTES[self.environ["PATH_INFO"]]()
+
+    def run(self):
+        server = make_server('localhost', 8080, self.myapp)
+        print "running on http://localhost:8080/..."
+        server.serve_forever()
         
 def render_template(template, **var):
     file = open(template)
@@ -37,12 +42,9 @@ def render_template(template, **var):
         for each in var:
             s = re.sub(r'{{\s*%s\s*}}' %each, str(var[each]), s)
     file.close()    
-    return s
+    return s    
         
-jamjar = JamJar(__name__)        
-        
-server = make_server('localhost', 8080, jamjar.myapp)
-print "running on http://localhost:8080/..."
  
 if __name__ == '__main__':
-    server.serve_forever()
+    jamjar = JamJar(__name__)
+    jamjar.run()
