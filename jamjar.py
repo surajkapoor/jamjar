@@ -16,10 +16,6 @@ class JamJar(object):
         self.method = environ["REQUEST_METHOD"]
         if self.method == "POST":
             self.data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)            
-            try:
-                self.data.getvalue(self.data.keys()[0])
-            except IndexError:
-                return "You didn't select an option"    
             return self.routes[environ["PATH_INFO"]](self.data)
         return self.routes[environ["PATH_INFO"]]()
 
