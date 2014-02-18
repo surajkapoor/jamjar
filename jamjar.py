@@ -12,18 +12,16 @@ class JamJar(object):
         self.routes[route] = func
         
     def myapp(self, environ, start_response):
-        self.environ = environ
-        self.start_response = start_response
-        self.start_response("200 OK", [('Content-Type','text/html')])     
-        self.method = self.environ["REQUEST_METHOD"]
+        start_response("200 OK", [('Content-Type','text/html')])     
+        self.method = environ["REQUEST_METHOD"]
         if self.method == "POST":
-            self.data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=self.environ)            
+            self.data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)            
             try:
                 self.data.getvalue(self.data.keys()[0])
             except IndexError:
                 return "You didn't select an option"    
-            return self.routes[self.environ["PATH_INFO"]](self.data)
-        return self.routes[self.environ["PATH_INFO"]]()
+            return self.routes[environ["PATH_INFO"]](self.data)
+        return self.routes[environ["PATH_INFO"]]()
 
     def run(self):
         server = make_server('localhost', 8080, self.myapp)
