@@ -17,7 +17,8 @@ class JamJar(object):
         if self.method == "POST":
             self.data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)            
             return self.routes[environ["PATH_INFO"]](self.data)
-        return self.routes[environ["PATH_INFO"]]()
+        else:
+            return self.routes[environ["PATH_INFO"]]()
 
     def run(self):
         server = make_server('localhost', 8080, self.myapp)
