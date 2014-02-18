@@ -7,6 +7,7 @@ class JamJar(object):
     def __init__(self, name):
         self.name = name
         self.routes = {}
+        self.templates = {}
 
     def add_route(self, route, func):
         self.routes[route] = func
@@ -26,12 +27,14 @@ class JamJar(object):
         server.serve_forever()
         
     def render_template(self, template, **vars):
-        with open(template) as f:
-            s = f.read()
-            for template_var in vars:
-                value = str(vars[template_var])
-                s = re.sub(r'{{\s*%s\s*}}' % template_var, value, s)
-        return s    
+        if template not in self.templates:
+            with open(template) as f:
+                self.templates[template] = f.read()
+        s = self.templates[template]
+        for template_var in vars:
+            value = str(vars[template_var])
+            s = re.sub(r'{{\s*%s\s*}}' % template_var, value, s)
+        return s
         
  
 if __name__ == '__main__':
